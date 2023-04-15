@@ -1,6 +1,6 @@
 'use strict';
 const Issue = require('../model/issue')
-const { createIssue, getAllIssues } = require('../controller/issueTrack')
+const { createIssue, getAllIssues, deleteIssue } = require('../controller/issueTrack')
 
 module.exports = function(app) {
 
@@ -16,8 +16,6 @@ module.exports = function(app) {
 
     })
 
-    .delete(function(req, res) {
-      let project = req.params.project;
-    });
+    .delete(deleteIssue);
 
 };
