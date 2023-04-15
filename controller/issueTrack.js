@@ -20,4 +20,17 @@ const createIssue = async (req, res) => {
   return res.json({issue})
 } 
 
-module.exports = { createIssue }
+const getAllIssues = async(req, res) => {
+  console.log('getting all issuess...')
+  try {
+    let issues = await Issue.find()
+    return res.status(200).send(issues)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({error})
+  }
+  return res.status(404)json({data: 'issues goes here'})
+}
+
+
+module.exports = { createIssue, getAllIssues }
