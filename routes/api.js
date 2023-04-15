@@ -1,5 +1,6 @@
 'use strict';
 const Issue = require('../model/issue')
+const { createIssue } = require('../controller/issueTrack')
 
 module.exports = function(app) {
 
@@ -26,20 +27,7 @@ module.exports = function(app) {
       res.json(items)
     })
 
-    .post(async function(req, res) {
-      let project = req.params.project;
-      console.log(req.body)
-      let { issue_title, issue_text, created_by, assigned_to, status_text } = req.body;
-      let issue = new Issue({issue_title})
-      let issueCreated = await issue.save()
-      if(!issueCreated) {
-        console.log('failed to create...')
-        return res.json({error: 'failed to create issue'})
-      }
-      console.log('issue created')
-      return res.json({issue: issueCreated})
-
-    })
+    .post(createIssue)
 
     .put(function(req, res) {
       let project = req.params.project;
