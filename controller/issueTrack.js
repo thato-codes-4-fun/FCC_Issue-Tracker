@@ -19,7 +19,12 @@ const createIssue = async (req, res) => {
     console.log('missing created by')
     return res.json({ error: 'required field(s) missing' })
   }
-    
+  if (!assigned_to){
+    assigned_to = ''
+  }
+  if(!status_text){
+    status_text = ''
+  }
   let newIssue = new Issue({
     issue_title,
     issue_text,
@@ -27,30 +32,30 @@ const createIssue = async (req, res) => {
     assigned_to,
     status_text,
   })
-  let issue =await newIssue.save()
+  let issue = await newIssue.save()
   console.log(issue)
   if (!issue){
+    console.log('error issue not created')
     return res.json({error: 'issue not saved'})
   }
   console.log('issue created successfully...')
-  return res.send(issue)
+  return res.send({
+    assigned_to: issue.assigned_to,
+    status_text: issue.status_text,
+    open: issue.open,
+    _id: issue._id,
+    issue_title: issue.issue_title,
+    issue_text: issue.issue_text,
+    created_by: issue.created_by,
+    created_on: issue.created_on,
+    updated_on: issue.updated_on
+  })
 } 
 
 const getAllIssues = async(req, res) => {
   console.log('getting all issuess...')
   try {
     let issues = await Issue.find()
-    // const {
-    //   assigned_to,
-    //   status_text,
-    //   open,
-    //   _id,
-    //   issue_title,
-    //   issue_text,
-    //   created_by,
-    //   created_on,
-    //   updated_on,
-    // } = issues
     return res.status(200).send(issues)
   } catch (error) {
     console.log(error)
