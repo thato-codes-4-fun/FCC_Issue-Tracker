@@ -5,6 +5,21 @@ const Issue = require('../model/issue')
 const createIssue = async (req, res) => {  
   console.log('creating issue...')
   let { issue_title, issue_text, created_by, assigned_to, status_text} = req.body
+  
+  if (!issue_title){
+    console.log('missing title')
+    return res.json({ error: 'required field(s) missing' })
+  }
+  
+  if (!issue_text){
+    console.log('missing issue text')
+    return res.json({ error: 'required field(s) missing' })
+  }
+  if(!created_by){
+    console.log('missing created by')
+    return res.json({ error: 'required field(s) missing' })
+  }
+    
   let newIssue = new Issue({
     issue_title,
     issue_text,
@@ -12,12 +27,13 @@ const createIssue = async (req, res) => {
     assigned_to,
     status_text,
   })
-  let issue = newIssue.save()
+  let issue =await newIssue.save()
+  console.log(issue)
   if (!issue){
     return res.json({error: 'issue not saved'})
   }
   console.log('issue created successfully...')
-  return res.json({issue})
+  return res.send(issue)
 } 
 
 const getAllIssues = async(req, res) => {
@@ -43,7 +59,7 @@ const getAllIssues = async(req, res) => {
   return res.status(404).json({data: 'issues goes here'})
 }
 
-const deleteIssue = async (req, res)=> {
+const deleteIssue = async (req, res) => {
   console.log('deleting issue...')
   console.log(req.body._id)
   const { _id } = req.body
@@ -66,9 +82,13 @@ const deleteIssue = async (req, res)=> {
     console.log('error occurred')
     return res.json({error:"could not delete",_id})
   }
-  
   return res.send('deleting issue')
 }
 
+const updateIssue = async (req, res) => {
+  console.log('updating issue')
+  res.send('updating issue')
+}
 
-module.exports = { createIssue, getAllIssues, deleteIssue }
+
+module.exports = { createIssue, getAllIssues, deleteIssue, updateIssue }
