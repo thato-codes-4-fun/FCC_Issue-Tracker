@@ -62,7 +62,7 @@ const getAllIssues = async(req, res) => {
   const query = req.query
   try {
     let issues = await Issue.find().select('assigned_to status_text open _id issue_title issue_text created_by created_on updated_on')
-    return res.status(200).send([issues])
+    return res.status(200).send(issues)
   } catch (error) {
     console.log(error)
     return res.status(500).json({error})
@@ -101,6 +101,25 @@ const deleteIssue = async (req, res) => {
 
 const updateIssue = async (req, res) => {
   console.log('updating issue')
+ 
+  let { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = req.body
+  if(!_id){
+    return res.json({ error: 'missing _id' })
+  }
+  if(!issue_title  && !issue_text && !created_by  && !assigned_to  && !status_text  && !open){
+    return res.json({ error: 'no update field(s) sent', '_id': _id })
+  }
+  try{
+    let updated = await Issue.updateOne({_id}, req.body)
+    console.log('updated: ', updated)
+    if (updated.modifiedCount == 0) {
+      return res.json({ error: 'could not update', '_id': _id })
+    }
+    return res.json({  result: 'successfully updated', '_id': _id })
+  }catch(e){
+    console.log('some error')
+    return res.json({ error: 'could not update', '_id': _id })
+  }
   res.send('updating issue')
 }
 
