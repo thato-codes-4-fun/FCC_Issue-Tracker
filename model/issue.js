@@ -24,6 +24,7 @@ const issueSchema = new mongoose.Schema({
   open: {
     type: Boolean,
     default: true,
+    required: true,
   },
 },{
   timestamps: {
