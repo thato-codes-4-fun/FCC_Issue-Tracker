@@ -6,6 +6,7 @@ const createIssue = async (req, res) => {
   let { project } = req.params
   
   console.log('creating issue...')
+  console.log(req.body)
   let { issue_title, issue_text, created_by, assigned_to, status_text, open} = req.body
   
   if (!issue_title){
@@ -123,7 +124,6 @@ const updateIssue = async (req, res) => {
   try{
     let updated = await Issue.updateOne({_id, project}, req.body)
     if (updated.modifiedCount == 0) {
-      await updated.save();
       return res.json({ error: 'could not update', '_id': _id })
     }
     return res.json({  result: 'successfully updated', '_id': _id })
