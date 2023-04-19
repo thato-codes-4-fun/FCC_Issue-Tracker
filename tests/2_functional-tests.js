@@ -100,7 +100,7 @@ suite('Functional Tests', function() {
         done()
       })
     })
-<<<<<<< HEAD
+
 
     test('Update one field on an issue', function(done){
       let item = {
@@ -189,8 +189,6 @@ suite('Functional Tests', function() {
         done()
       })
     })
-=======
->>>>>>> b66eace380b9777814849072b152b19fc6f01a52
     
   })
 });
