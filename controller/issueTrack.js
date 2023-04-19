@@ -6,6 +6,7 @@ const createIssue = async (req, res) => {
   let { project } = req.params
   
   console.log('creating issue...')
+  console.log(req.body)
   let { issue_title, issue_text, created_by, assigned_to, status_text, open} = req.body
   
   if (!issue_title){
