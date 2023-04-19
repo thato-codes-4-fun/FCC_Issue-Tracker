@@ -101,7 +101,6 @@ suite('Functional Tests', function() {
       })
     })
 
-
     test('Update one field on an issue', function(done){
       let item = {
         _id: '643f06f38d3931ec093e313f',
@@ -186,6 +185,58 @@ suite('Functional Tests', function() {
       .end(function(err, res){
         assert.equal(res.status, 200)
         assert.equal(res.text, '{"error":"could not update","_id":"invalid id"}')
+        done()
+      })
+    })
+
+    test('Delete an issue', function(done){
+      let deletedItem = new Issue({
+        assigned_to: 'Thato',
+        issue_title: 'Delete issue',
+        issue_text: 'delete me',
+        created_by: 'Max Ver',
+        project: 'deleted'
+      })
+      deletedItem.save()
+
+      chai
+      .request(server)
+      .delete(`/api/issues/deleted/`)
+      .send({_id: deletedItem._id})
+      .end(function(err,res){
+        assert.equal(res.status, 200)
+        assert.equal(res.text, `{"result":"successfully deleted","_id":"${deletedItem._id}"}`)
+        done()
+      })
+    })
+
+    test('Delete an issue with an invalid _id', function(done){
+      let deletedItem = new Issue({
+        assigned_to: 'Thato',
+        issue_title: 'Delete issue',
+        issue_text: 'delete me',
+        created_by: 'Max Ver',
+        project: 'deleted'
+      })
+      deletedItem.save()
+      chai
+      .request(server)
+      .delete('/api/issues/deleted/')
+      .send({_id: 'invalid id'})
+      .end(function(err, res){
+        assert.equal(res.status, 200)
+        done()
+      })
+    })
+
+    test('Delete an issue with missing _id', function(done){
+      chai
+      .request(server)
+      .delete('/api/issues/deleted/')
+      .send({err: 'missing id'})
+      .end(function(err, res){
+        assert.equal(res.status, 200)
+        assert.equal(res.text, '{"error":"missing _id"}')
         done()
       })
     })
